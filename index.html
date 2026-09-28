@@ -208,6 +208,11 @@
   .card p { margin: 0; font-size: 14.5px; color: var(--ink-2); line-height: 1.55; }
   .card .hl, .proj .main p strong { background: linear-gradient(transparent 58%, var(--mark) 58%, var(--mark) 92%, transparent 92%); padding-inline: 1px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
   .card .hl { color: var(--ink); font-weight: 500; }
+  /* A card that holds its own inline link uses a stretched "Read more" link instead of wrapping in <a> */
+  div.card { position: relative; }
+  .card .stretch::after { content: ""; position: absolute; inset: 0; border-radius: 12px; }
+  .xlink { position: relative; z-index: 1; color: var(--ink); font-weight: 500; border-bottom: 1px solid var(--accent); transition: color .2s, border-color .2s; }
+  .xlink:hover { color: var(--accent-ink); }
   .card .go { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
   .card .go em { font-style: normal; transition: transform .4s var(--ease), color .3s; }
   .card:hover .go em { transform: translateY(3px); color: var(--accent-ink); }
@@ -286,7 +291,7 @@
   .school .rank { display: inline-block; margin-top: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: .04em; color: var(--rank-fg); background: var(--rank-bg); font-weight: 500; border: 1px solid var(--rank-border); padding: 3px 8px; border-radius: 999px; }
 
   /* ---------- About ---------- */
-  .about { display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(28px, 5vw, 72px); }
+  .about { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(28px, 5vw, 72px); }
   .about .text p { margin: 0 0 18px; font-size: 17px; color: var(--ink-2); max-width: 60ch; }
   .about .text p.lead { font-size: clamp(22px, 2.4vw, 28px); line-height: 1.35; color: var(--ink); letter-spacing: -.02em; font-weight: 400; }
   .about .text em { font-family: var(--serif); font-size: 1.12em; color: var(--ink); }
@@ -294,7 +299,7 @@
   .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .photo figcaption { position: absolute; left: 14px; bottom: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,.5); }
 
-  .faves { margin-top: 36px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .faves { margin-top: 36px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; max-width: 720px; }
   .fave { margin: 0; display: grid; gap: 10px; align-content: start; }
   .fave .cover { aspect-ratio: 1; border-radius: 6px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); max-width: 100%; }
   .fave .cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -561,14 +566,14 @@
         </div>
         <span class="go">Jan 2026 — Present <em>Read more ↓</em></span>
       </a>
-      <a class="card" href="#jumiso">
+      <div class="card">
         <div class="plate"><img data-logo="jumiso" src="assets/jumiso.jpg" alt="JUMISO logo"></div>
         <div>
           <h3>JUMISO <span>· Creator marketing</span></h3>
-          <p>Worked with creators, from rising names to James Welch, across the U.S., LATAM and APAC to turn a new Niacinamide serum into a <span class="hl">bestseller</span>.</p>
+          <p>Worked with creators, from rising names to <a class="xlink" href="https://www.youtube.com/c/JamesWelsh" target="_blank" rel="noopener">James Welsh ↗</a>, across the U.S., LATAM and APAC to turn a new Niacinamide serum into a <span class="hl">bestseller</span>.</p>
         </div>
-        <span class="go">Aug 2025 — Jan 2026 <em>Read more ↓</em></span>
-      </a>
+        <a class="go stretch" href="#jumiso">Aug 2025 — Jan 2026 <em>Read more ↓</em></a>
+      </div>
       <a class="card" href="#worldfolio">
         <div class="plate"><img data-logo="worldfolio" src="assets/worldfolio.jpg" alt="The Worldfolio logo"></div>
         <div>
@@ -660,7 +665,7 @@
       <div class="main">
         <h3>Influencer &amp; Content Marketing Manager<small>JUMISO is a K-beauty brand focused on “K-derma” skincare.</small></h3>
         <p>I led the influencer and creator marketing team across the U.S., LATAM and APAC with a <strong>$700K quarterly budget</strong>, and I was involved in every stage: content strategy, creator briefs, calls with talent, and sometimes shipping products myself to make a launch date.</p>
-        <p>Our biggest win was the Niacinamide Serum. We took a new product, educated the market on why it matters, and turned it into a <strong>bestseller</strong> through creators, including celebrities and top names like James Welch.</p>
+        <p>Our biggest win was the Niacinamide Serum. We took a new product, educated the market on why it matters, and turned it into a <strong>bestseller</strong> through creators, including celebrities and top names like <a class="xlink" href="https://www.youtube.com/c/JamesWelsh" target="_blank" rel="noopener">James Welsh ↗</a>.</p>
         <div class="metrics">
           <div><b class="num">$700K</b><span>Quarterly creator budget</span></div>
           <div><b class="num">3</b><span>Regions: U.S., LATAM, APAC</span></div>
@@ -809,9 +814,6 @@
           </figure>
         </div>
       </div>
-      <figure class="photo">
-        <img src="assets/golf.jpg" alt="">
-      </figure>
     </div>
   </section>
 
