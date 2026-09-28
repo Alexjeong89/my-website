@@ -254,13 +254,17 @@
   .partners .label { display: block; margin-bottom: 14px; }
   .marquee {
     overflow: hidden; border-block: 1px solid var(--line); padding-block: 22px;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-            mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
+            mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
   }
-  .track { display: flex; width: max-content; animation: slide 38s linear infinite; }
+  /* The script repeats the set until it overfills the strip, then slides exactly one set width per loop,
+     so the seam is invisible and the strip is never empty. Speed is constant whatever the logo count. */
+  .track { display: flex; width: max-content; will-change: transform; backface-visibility: hidden; }
+  .track.ready { animation: slide var(--dur, 40s) linear infinite; }
   .marquee:hover .track { animation-play-state: paused; }
-  .set { display: flex; align-items: center; gap: 56px; padding-right: 56px; }
-  @keyframes slide { to { transform: translateX(-50%); } }
+  .set { display: flex; flex: none; align-items: center; gap: 56px; padding-right: 56px; }
+  .set .pl { flex: none; }
+  @keyframes slide { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(calc(-1 * var(--shift)), 0, 0); } }
   .pl { white-space: nowrap; color: var(--ink-2); line-height: 1; transition: color .3s, opacity .3s; display: inline-flex; align-items: center; gap: 8px; }
   .pl:hover { color: var(--ink); }
   .pl.nyt { font-family: "UnifrakturMaguntia", "Old English Text MT", serif; font-size: 30px; }
@@ -274,6 +278,8 @@
   .pl.koupon { font-weight: 600; font-size: 24px; letter-spacing: -.03em; }
   .pl.koupon span { font-family: var(--mono); font-size: 14px; border: 1.5px solid currentColor; border-radius: 5px; padding: 3px 5px; margin-left: 3px; }
   .pl.nypost { font-family: "Playfair Display", Georgia, serif; font-style: italic; font-weight: 900; font-size: 20px; letter-spacing: .01em; text-transform: uppercase; border: 2px solid currentColor; padding: 6px 10px; }
+  .pl.hearst { font-weight: 800; font-size: 24px; letter-spacing: .14em; display: inline-flex; flex-direction: column; align-items: center; gap: 3px; line-height: 1; }
+  .pl.hearst small { font-weight: 400; font-size: 11px; letter-spacing: .32em; text-transform: uppercase; }
   .pl.bdg { font-weight: 700; font-size: 28px; letter-spacing: .02em; }
   .pl.bdg small { font-weight: 400; font-size: 16px; letter-spacing: .04em; }
 
@@ -635,7 +641,7 @@
 
         <div class="partners">
           <span class="label">Partners I’ve worked with</span>
-          <div class="marquee" aria-label="Partners: The New York Times, Good Morning America, iHerb, iHeartRadio, People Inc., Koupon.AI, New York Post, BDG Media">
+          <div class="marquee" aria-label="Partners: The New York Times, Good Morning America, iHerb, iHeartRadio, People Inc., Koupon.AI, New York Post, Hearst Magazines, BDG Media">
             <div class="track" aria-hidden="true">
               <div class="set">
                 <span class="pl nyt">The New York Times</span>
@@ -645,6 +651,7 @@
                 <span class="pl people">PEOPLE<small>Inc.</small></span>
                 <span class="pl koupon">Koupon<span>.AI</span></span>
                 <span class="pl nypost">New York Post</span>
+                <span class="pl hearst">HEARST<small>magazines</small></span>
                 <span class="pl bdg">BDG <small>MEDIA</small></span>
               </div>
             </div>
@@ -850,9 +857,23 @@
 </main>
 
 <script>
-  // Duplicate the partner set so the marquee loops seamlessly
-  document.querySelectorAll('.track').forEach(function (t) {
-    t.appendChild(t.firstElementChild.cloneNode(true));
+  // Partner strip: fill the width with enough copies of the logo set, then loop by exactly one set width
+  document.querySelectorAll('.marquee').forEach(function (m) {
+    var track = m.querySelector('.track'), set = track.querySelector('.set'), speed = 45; // px per second
+    function build() {
+      [].slice.call(track.querySelectorAll('.set.clone')).forEach(function (c) { c.remove(); });
+      var w = set.getBoundingClientRect().width;
+      if (!w) return;
+      var copies = Math.ceil(m.clientWidth / w) + 1;
+      for (var i = 0; i < copies; i++) { var c = set.cloneNode(true); c.classList.add('clone'); track.appendChild(c); }
+      track.style.setProperty('--shift', w + 'px');
+      track.style.setProperty('--dur', (w / speed).toFixed(2) + 's');
+      track.classList.add('ready');
+    }
+    build();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+    var lastW = m.clientWidth;
+    addEventListener('resize', function () { if (m.clientWidth !== lastW) { lastW = m.clientWidth; build(); } });
   });
 
   // Header border once scrolled
