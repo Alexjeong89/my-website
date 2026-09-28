@@ -1,0 +1,20 @@
+# Build output (regenerate with ./build.sh)
+portfolio.html
+
+# Secrets: never commit these
+.env
+.env.*
+*.pem
+*.key
+*.p12
+secrets/
+credentials*.json
+
+# Local tooling
+.claude/
+node_modules/
+*.log
+
+# macOS
+.DS_Store
+._*
