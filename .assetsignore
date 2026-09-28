@@ -1,0 +1,12 @@
+# Files in this folder that are part of the repo but not part of the website
+.git
+.gitignore
+.assetsignore
+.wrangler
+.claude
+node_modules
+wrangler.jsonc
+README.md
+build.sh
+portfolio.html
+.DS_Store

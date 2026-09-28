@@ -11,6 +11,7 @@ secrets/
 credentials*.json
 
 # Local tooling
+.wrangler/
 .claude/
 node_modules/
 *.log

@@ -26,3 +26,15 @@ then visit http://localhost:8765.
 
 Repository **Settings → Pages → Build and deployment**: set *Source* to "Deploy from a branch",
 branch `main`, folder `/ (root)`. The site appears at `https://<your-username>.github.io/my-website/`.
+
+## Deploy with Cloudflare Workers
+
+`wrangler.jsonc` serves this folder as static assets (no Worker code). `.assetsignore` keeps
+repo-only files such as this README and `build.sh` from being published.
+
+In the Cloudflare Workers setup for this repo:
+
+- Build command: leave empty
+- Deploy command: `npx wrangler deploy`
+
+The Worker name in Cloudflare must match `"name"` in `wrangler.jsonc` (`my-website`).
